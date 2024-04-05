@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseUrl: "https://qorilazo.amsoft.dev"
+  baseUrl: "https://findernum.onrender.com"
 };

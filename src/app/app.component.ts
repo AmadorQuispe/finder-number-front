@@ -20,7 +20,7 @@ export class AppComponent {
   public result = signal<number | null>(null);
   public errorResponse = signal<String | null>(null);
   public loading = false;
-  
+
   public formData: FormGroup;
   constructor() {
 
@@ -33,39 +33,39 @@ export class AppComponent {
     const valueXControl = this.formData?.get('valueX');
     const valueYControl = this.formData?.get('valueY');
     if (valueXControl) {
-      valueXControl.valueChanges.subscribe(value => {        
-        this.formData.controls['valueY'].setValidators([Validators.min(0),Validators.max(value-1)]);
-        this.formData.controls['valueY'].updateValueAndValidity;        
+      valueXControl.valueChanges.subscribe(value => {
+        this.formData.controls['valueY'].setValidators([Validators.min(0), Validators.max(value - 1)]);
+        this.formData.controls['valueY'].updateValueAndValidity;
       });
     }
 
-    if(valueYControl){
+    if (valueYControl) {
       valueYControl.valueChanges.subscribe(value => {
-        this.formData.controls['valueN'].addValidators([Validators.min(value),Validators.max(Math.pow(10, 9))]);
-        this.formData.controls['valueN'].updateValueAndValidity;        
+        this.formData.controls['valueN'].addValidators([Validators.min(value), Validators.max(Math.pow(10, 9))]);
+        this.formData.controls['valueN'].updateValueAndValidity;
       });
     }
 
   }
 
 
-  public isNotValidField(field :string){
-    return this.formData.controls[field].errors 
-     && this.formData.controls[field].touched; 
+  public isNotValidField(field: string) {
+    return this.formData.controls[field].errors
+      && this.formData.controls[field].touched;
   }
 
-  public getFieldError(field : string) {
-    if(!this.formData.controls[field]) return null;
+  public getFieldError(field: string) {
+    if (!this.formData.controls[field]) return null;
     const errors = this.formData.controls[field].errors || {};
 
-    for (const key of Object.keys(errors)){
+    for (const key of Object.keys(errors)) {
       switch (key) {
         case "required":
           return 'Este campo es requerido';
-        case "min":          
-          return `El valor mínimo es ${errors['min'].min}`     
+        case "min":
+          return `El valor mínimo es ${errors['min'].min}`
         case 'max':
-          return `El valor máximo es ${errors['max'].max}` 
+          return `El valor máximo es ${errors['max'].max}`
       }
     }
     return null;
@@ -73,14 +73,19 @@ export class AppComponent {
 
 
 
-  public handleSubmit() {
+  public handleSubmit(method: 'GET'|'POST') {
     Object.keys(this.formData.controls).forEach(form => this.formData.get(form)?.markAsDirty());
-    const { valueX, valueY, valueN } = this.formData.value;    
     if (this.formData.valid) {
+      const { valueX, valueY, valueN } = this.formData.value;
+      
+      const fn = (method === 'GET')
+        ? this.api.findMaxKGet(valueX, valueY, valueN)
+        : this.api.findMaxKPost({ x: valueX, y: valueY, n: valueN });
+
       this.errorResponse.set(null);
       this.result.set(null);
       this.loading = true;
-      this.api.findMaxK(valueX, valueY, valueN).subscribe({
+      fn.subscribe({
         next: (resp) => {
           this.result.set(resp.result);
           this.loading = false;

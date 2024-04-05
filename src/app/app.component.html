@@ -2,7 +2,7 @@
   <div class="content">
     <h1>Calcular el número maximo</h1>
     <p>Dado tres números enteros X, Y y N. encontrar el máximo entero K tal que 0 <= K <=N y que K mod X=Y</p>
-        <form [formGroup]="formData" (ngSubmit)="handleSubmit()" class="form">
+        <form [formGroup]="formData"  class="form">
           <div class="form-group">
             <label for="valueX" class="form-label">Valor x</label>
             <input type="number" class="form-input" formControlName="valueX" id="valueX">
@@ -25,10 +25,14 @@
             <span>{{getFieldError('valueN')}} </span>
             }
           </div>
-          <button type="submit" class="form-submit-btn">Calcular</button>
+          <div class="button-group">
+            <button type="submit" class="form-submit-btn" (click)="handleSubmit('GET')" >Calcular con GET</button>
+            <button type="submit" class="form-submit-btn" (click)="handleSubmit('POST')">Calcular con POST</button>
+          </div>
+          
         </form>
 
-        <div class="content-result">
+        <div class="content-result" >
           @if(loading){
           <p>Obteniendo resultado</p>
           }@else if(result()){
