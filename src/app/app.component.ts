@@ -34,14 +34,14 @@ export class AppComponent {
     const valueYControl = this.formData?.get('valueY');
     if (valueXControl) {
       valueXControl.valueChanges.subscribe(value => {
-        this.formData.controls['valueY'].setValidators([Validators.min(0), Validators.max(value - 1)]);
+        this.formData.controls['valueY'].setValidators([Validators.required,Validators.min(0), Validators.max(value - 1)]);
         this.formData.controls['valueY'].updateValueAndValidity;
       });
     }
 
     if (valueYControl) {
       valueYControl.valueChanges.subscribe(value => {
-        this.formData.controls['valueN'].addValidators([Validators.min(value), Validators.max(Math.pow(10, 9))]);
+        this.formData.controls['valueN'].addValidators([Validators.required,Validators.min(value), Validators.max(Math.pow(10, 9))]);
         this.formData.controls['valueN'].updateValueAndValidity;
       });
     }
